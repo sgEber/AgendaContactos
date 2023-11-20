@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Contactos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+        .contact-item img {
+            width: 60px;
+            height: 60px;
+            margin-right: 20px;
+            border-radius: 30px;
+            object-fit: cover;
+        }
+        .contact-info {
+            flex: 1;
+        }
+        .contact-info strong {
+            color: #555;
+        }
+        .contact-info div {
+            margin-bottom: 5px;
+        }
+
+        /* ... Boton de eliminar ... */ 
+        .delete-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #ff1a1a;
+        }
+
+        /* ... Boton de modificar ... */ 
+        .edit-button {
+        background-color: #4CAF50; /* Color Verde */
+        color: white;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        }
+
+        .edit-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Contactos</h1>
+        <form action="/contacts/search" method="GET" class="search-form">
+            <label for="apellidos">Buscar por Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos">
+            <button type="submit">Buscar</button>
+        </form>
+        <% if (contacts.length === 0) { %>
+            <p>No se encontraron contactos con esos apellidos.</p>
+        <% } else { %>
+            <% contacts.forEach(contact => { %>
+                <div class="contact-item">
+                    <img src="/<%= contact.foto %>" alt="Perfil de <%= contact.nombre %> <%= contact.apellidos %>" style="width:100px;height:100px;">
+                    <div class="contact-info">
+                        <div><strong>Nombre:</strong> <%= contact.nombre %></div>
+                        <div><strong>Apellidos:</strong> <%= contact.apellidos %></div>
+                        <div><strong>Correo:</strong> <%= contact.correo %></div>
+                        <div><strong>Fecha de Nacimiento:</strong> <%= contact.fecha_nac %></div>
+                    </div>
+                    <form action="/contacts/<%= contact.id %>?_method=DELETE" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este contacto?');">
+                        <button type="submit" class="delete-button">Eliminar</button>
+                    </form>
+                    <form action="/contacts/edit/<%= contact.id %>" method="GET">
+                        <button type="submit" class="edit-button">Modificar</button>
+                    </form>
+                </div>
+            <% }); %>
+        <% } %>
+                
+    </div>
+</body>
+</html>
